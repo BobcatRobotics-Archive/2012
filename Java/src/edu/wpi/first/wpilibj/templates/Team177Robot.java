@@ -55,6 +55,9 @@ public class Team177Robot extends IterativeRobot {
     Joystick leftStick = new Joystick(1);
     Joystick rightStick = new Joystick(2);
     Joystick operatorStick = new Joystick(3);
+    
+    /* Instansiate Locator - Scaling set in contructor*/
+    Locator locator = new Locator(2,3,4,5,1); /*Left Encoder A,B, Right Encoder A,B, Gyro*/    
 
     /* Pnumatics
      * Pressure switch = DIO 1
@@ -120,6 +123,10 @@ public class Team177Robot extends IterativeRobot {
         
         /* Set omnis up */
         omnis.set(false);
+        
+        /* Configure and Start the locator */
+        locator.setDistancePerPulse(1.0f, 1.0f);  /*Set encoder scaling */
+        locator.start();
         
         /* Turn on watchdog */
         getWatchdog().setEnabled(true);
