@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.CANJaguar;
 
 
 /**
@@ -37,13 +38,15 @@ public class Team177Robot extends IterativeRobot {
     /** Operator Control Buttons **/
     private static final int finButton = 7;
     private static final int fingerButton = 2;
+    private static final int shootButton = 6;
 
     
     /** IO Definitions **/
     
     /* Instansiate Speed Controlers and Drive */
+    Victor finRollers = new Victor(5);
     Victor frontLeftMotor = new Victor(4);
-    Victor frontRightMotor = new Victor(3);    
+    Victor frontRightMotor = new Victor(3);
     Victor rearLeftMotor = new Victor(1);
     Victor rearRightMotor = new Victor(2);
     RobotDrive drive = new RobotDrive(frontLeftMotor,rearLeftMotor,frontRightMotor,rearRightMotor);
@@ -64,6 +67,7 @@ public class Team177Robot extends IterativeRobot {
     Solenoid omnis = new Solenoid(2);
     Solenoid fin = new Solenoid(3);
     Solenoid fingers = new Solenoid(4);
+    // CANJaguar shooter1, shooter2, turret, rollers;
     
     /* State Variables */
     boolean finState;
@@ -76,7 +80,32 @@ public class Team177Robot extends IterativeRobot {
     public void robotInit() {        
         /* Initalize Drive */
         //drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
-        //drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);                                
+        //drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true); 
+        
+        //Setup Jaguars
+        try
+        {
+/*            shooter1 = new CANJaguar(2);
+            shooter2 = new CANJaguar(3);
+            turret = new CANJaguar(4);
+            rollers = new CANJaguar(5);
+            /*shooter1.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
+            shooter1.changeControlMode(CANJaguar.ControlMode.kSpeed);
+            shooter1.setPID(.1, .01, 0);
+            shooter2.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
+            shooter2.changeControlMode(CANJaguar.ControlMode.kSpeed);
+            shooter2.setPID(.1, .01, 0);
+            turret.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
+            //turret.setPID();
+            rollers.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
+            //rollers.setPID();
+            *
+            */
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error: " + e);
+        }
 
         /* Start Compressor - logic handled by Compressor class */
         compressor.start();
@@ -113,7 +142,7 @@ public class Team177Robot extends IterativeRobot {
         drive.tankDrive(leftStick, rightStick); // drive with the joysticks
         shifter.set(rightStick.getRawButton(shiftButton));
         
-        omnis.set(leftStick.getRawButton(omniButton)); 
+        omnis.set(leftStick.getRawButton(omniButton));
         
         /* Fin code */        
         boolean currentFinButton = operatorStick.getRawButton(finButton);
@@ -125,8 +154,41 @@ public class Team177Robot extends IterativeRobot {
         
         fin.set(finState);
         
+        /* Fin Rollers */
+        double rightControlAxis = operatorStick.getRawAxis(5);
+        if(rightControlAxis > 0)
+        {
+            finRollers.set(.5D);
+        }
+        else if(rightControlAxis < 0)
+        {
+            finRollers.set(-.5D);
+        }
+        else
+        {
+            finRollers.set(0);
+        }
+        
         /* Fingers */
-        fingers.set(operatorStick.getRawButton(fingerButton)); 
+        fingers.set(operatorStick.getRawButton(fingerButton));
+        
+        // Shooter
+        if(operatorStick.getRawButton(shootButton))
+        {
+            try
+            {
+  /*              shooter1.setX(2000);
+                shooter2.setX(2000);
+    */      }
+            catch(Exception e)
+            {
+                System.out.println("ERRORS: " + e);
+            }
+            
+        }
+        
+        /* Turret */
+        
         
         Timer.delay(0.005);
         getWatchdog().feed();
