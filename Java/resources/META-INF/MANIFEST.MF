@@ -1,4 +1,4 @@
-MIDlet-Name: PreseasonTesting
+MIDlet-Name: Team177Robot
 MIDlet-Version: 1.0.0
 MIDlet-Vendor: FIRST
 MIDlet-1: Team177Robot, , edu.wpi.first.wpilibj.templates.Team177Robot
