@@ -70,7 +70,8 @@ public class Team177Robot extends IterativeRobot {
     Solenoid omnis = new Solenoid(2);
     Solenoid fin = new Solenoid(3);
     Solenoid fingers = new Solenoid(4);
-    // CANJaguar shooter1, shooter2, turret, rollers;
+    
+    CANJaguar shooter1, shooter2, turret, rollers;
     
     /* State Variables */
     boolean finState;
@@ -88,10 +89,10 @@ public class Team177Robot extends IterativeRobot {
         //Setup Jaguars
         try
         {
-/*            shooter1 = new CANJaguar(2);
+            shooter1 = new CANJaguar(2);
             shooter2 = new CANJaguar(3);
             turret = new CANJaguar(4);
-            rollers = new CANJaguar(5);
+            rollers = new CANJaguar(6);
             /*shooter1.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
             shooter1.changeControlMode(CANJaguar.ControlMode.kSpeed);
             shooter1.setPID(.1, .01, 0);
@@ -139,6 +140,14 @@ public class Team177Robot extends IterativeRobot {
         getWatchdog().feed();
     }
 
+    /**
+     * Initialization code for teleop mode should go here.
+     */
+    public void teleopInit() {
+        locator.Reset();
+    }
+    
+    
     /**
      * This function is called periodically during operator control
      */
@@ -196,6 +205,8 @@ public class Team177Robot extends IterativeRobot {
         
         /* Turret */
         
+        
+        System.out.println("location: (" + locator.GetX() +"," + locator.GetY() +") " + locator.GetHeading());
         
         Timer.delay(0.005);
         getWatchdog().feed();

@@ -17,6 +17,10 @@ public class EnhancedGyro extends Gyro {
     }
     
     public double GetHeading() {
-        return getAngle()%360;
+        double a =  getAngle()%360;
+        if (a < 0) {
+            a += 360;
+        }
+        return a;
     }
 }

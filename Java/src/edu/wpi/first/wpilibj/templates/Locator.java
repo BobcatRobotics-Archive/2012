@@ -66,7 +66,9 @@ public class Locator {
 
         UpdateLocation() {
             x = 0;
-            y = 0;        
+            y = 0;    
+            heading = 0;
+            headingGyro.reset();
         }
         
         public void Reset() {
@@ -91,7 +93,7 @@ public class Locator {
                 right = rightEncoder.getDistance();                
                 /* Average the two encoder values */ 
                 /* TODO - posiably add error checking to detect a failed encoder and ignore it */
-                distance = ((lastLeft + left)+(lastRight + right))/2.0;                               
+                distance = ((left-lastLeft )+(right-lastRight ))/2.0;                               
                 heading = headingGyro.GetHeading();
                 
                 /* Do fancy trig stuff */
