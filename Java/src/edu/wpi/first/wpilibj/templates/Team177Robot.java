@@ -40,6 +40,8 @@ public class Team177Robot extends IterativeRobot {
     private static final int fingerButton = 2;
     private static final int shootButton = 6;
 
+    private static final int turretAxis = 5;
+    private static final int stage1Axis = 2;
     
     /** IO Definitions **/
     
@@ -93,18 +95,25 @@ public class Team177Robot extends IterativeRobot {
             shooter2 = new CANJaguar(3);
             turret = new CANJaguar(4);
             rollers = new CANJaguar(6);
+            
+           
             /*shooter1.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
             shooter1.changeControlMode(CANJaguar.ControlMode.kSpeed);
             shooter1.setPID(.1, .01, 0);
             shooter2.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
             shooter2.changeControlMode(CANJaguar.ControlMode.kSpeed);
             shooter2.setPID(.1, .01, 0);
-            turret.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
-            //turret.setPID();
-            rollers.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
-            //rollers.setPID();
-            *
             */
+            
+            turret.setPositionReference(CANJaguar.PositionReference.kQuadEncoder);
+            turret.setPID(-1000, -1, 0);
+            turret.configSoftPositionLimits(2.75, 8.25);
+            turret.configEncoderCodesPerRev(128);
+            turret.changeControlMode(CANJaguar.ControlMode.kPosition);
+            turret.enableControl(5.5);
+            //rollers.setSpeedReference(CANJaguar.SpeedReference.kQuadEncoder);
+            //rollers.setPID();
+          
         }
         catch(Exception e)
         {
@@ -171,14 +180,14 @@ public class Team177Robot extends IterativeRobot {
         fin.set(finState);
         
         /* Fin Rollers */
-        double rightControlAxis = operatorStick.getRawAxis(5);
+        double rightControlAxis = operatorStick.getRawAxis(stage1Axis);
         if(rightControlAxis > 0)
         {
-            finRollers.set(.5D);
+            finRollers.set(0.5D);
         }
         else if(rightControlAxis < 0)
         {
-            finRollers.set(-.5D);
+            finRollers.set(-0.5D);
         }
         else
         {
@@ -204,6 +213,13 @@ public class Team177Robot extends IterativeRobot {
         }
         
         /* Turret */
+        try {
+            double pos = turret.getPosition();
+            pos = ((pos*32.72)+(operatorStick.getRawAxis(turretAxis)*100))/32.72;
+            turret.setX(pos);
+        } catch (Exception e) {
+            System.out.println("Errors:" + e);
+        }
         
         
         System.out.println("location: (" + locator.GetX() +"," + locator.GetY() +") " + locator.GetHeading());
